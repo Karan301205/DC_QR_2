@@ -5,7 +5,16 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [mealStatus, setMealStatus] = useState(initializeMealStatus());
+  const [mealStatus, setMealStatus] = useState({});
+  const [notifications, setNotifications] = useState({});
+
+  const login = (userData) => {
+    setUser(userData);
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
 
   const updateMealStatus = (email, mealType, status) => {
     setMealStatus(prev => ({
@@ -15,10 +24,46 @@ export const AppProvider = ({ children }) => {
         [mealType]: status
       }
     }));
+
+    // Add notification for the student
+    if (status) {
+      setNotifications(prev => ({
+        ...prev,
+        [email]: {
+          ...prev[email],
+          [mealType]: {
+            message: `${mealType.charAt(0).toUpperCase() + mealType.slice(1)} has been served!`,
+            timestamp: new Date().toISOString(),
+            read: false
+          }
+        }
+      }));
+    }
+  };
+
+  const markNotificationAsRead = (email, mealType) => {
+    setNotifications(prev => ({
+      ...prev,
+      [email]: {
+        ...prev[email],
+        [mealType]: {
+          ...prev[email]?.[mealType],
+          read: true
+        }
+      }
+    }));
   };
 
   return (
-    <AppContext.Provider value={{ user, setUser, mealStatus, updateMealStatus }}>
+    <AppContext.Provider value={{
+      user,
+      login,
+      logout,
+      mealStatus,
+      updateMealStatus,
+      notifications,
+      markNotificationAsRead
+    }}>
       {children}
     </AppContext.Provider>
   );
