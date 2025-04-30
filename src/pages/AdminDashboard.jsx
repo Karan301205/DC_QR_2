@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 // Add custom styles for QR scanner
 const qrScannerStyles = `
@@ -84,8 +85,27 @@ const StyledButton = styled(Button)(({ theme, served }) => ({
   },
 }));
 
+const LogoutButton = styled(Button)(({ theme }) => ({
+  position: 'absolute',
+  top: '20px',
+  right: '20px',
+  borderRadius: '12px',
+  padding: '8px 16px',
+  textTransform: 'none',
+  fontSize: '1rem',
+  fontWeight: 600,
+  background: 'linear-gradient(45deg, #f44336 30%, #ff7961 90%)',
+  boxShadow: '0 3px 5px 2px rgba(244, 67, 54, .3)',
+  color: 'white',
+  '&:hover': {
+    background: 'linear-gradient(45deg, #d32f2f 30%, #ef5350 90%)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  },
+}));
+
 const AdminDashboard = () => {
-  const { user, mealStatus, updateMealStatus } = useApp();
+  const { user, mealStatus, updateMealStatus, logout } = useApp();
   const navigate = useNavigate();
   const [scannedStudent, setScannedStudent] = useState(null);
   const [error, setError] = useState('');
@@ -136,6 +156,11 @@ const AdminDashboard = () => {
       document.head.removeChild(styleElement);
     };
   }, [user, navigate]);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const handleMealToggle = (mealType) => {
     setSelectedMeal(mealType);
@@ -189,6 +214,13 @@ const AdminDashboard = () => {
 
   return (
     <Container maxWidth="md">
+      <LogoutButton
+        variant="contained"
+        startIcon={<LogoutIcon />}
+        onClick={handleLogout}
+      >
+        Logout
+      </LogoutButton>
       <Box sx={{ 
         mt: 4,
         mb: 4,

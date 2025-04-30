@@ -14,11 +14,13 @@ import {
   Divider,
   Snackbar,
   Alert,
-  IconButton
+  IconButton,
+  Button
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -46,8 +48,27 @@ const MealCard = styled(Paper)(({ theme, served }) => ({
   },
 }));
 
+const LogoutButton = styled(Button)(({ theme }) => ({
+  position: 'absolute',
+  top: '20px',
+  right: '20px',
+  borderRadius: '12px',
+  padding: '8px 16px',
+  textTransform: 'none',
+  fontSize: '1rem',
+  fontWeight: 600,
+  background: 'linear-gradient(45deg, #f44336 30%, #ff7961 90%)',
+  boxShadow: '0 3px 5px 2px rgba(244, 67, 54, .3)',
+  color: 'white',
+  '&:hover': {
+    background: 'linear-gradient(45deg, #d32f2f 30%, #ef5350 90%)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+  },
+}));
+
 const StudentDashboard = () => {
-  const { user, mealStatus, notifications, markNotificationAsRead } = useApp();
+  const { user, mealStatus, notifications, markNotificationAsRead, logout } = useApp();
   const navigate = useNavigate();
   const [openNotification, setOpenNotification] = useState(false);
   const [currentNotification, setCurrentNotification] = useState(null);
@@ -77,6 +98,11 @@ const StudentDashboard = () => {
     setOpenNotification(false);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   if (!user) return null;
 
   const meals = [
@@ -88,6 +114,13 @@ const StudentDashboard = () => {
 
   return (
     <Container maxWidth="md">
+      <LogoutButton
+        variant="contained"
+        startIcon={<LogoutIcon />}
+        onClick={handleLogout}
+      >
+        Logout
+      </LogoutButton>
       <Box sx={{ 
         mt: 4,
         mb: 4,
